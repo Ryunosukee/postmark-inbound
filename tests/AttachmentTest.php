@@ -1,8 +1,8 @@
 <?php
 
-namespace Mvdnbrk\Postmark\Tests;
+namespace dcorreah\Postmark\Tests;
 
-use Mvdnbrk\Postmark\Attachment;
+use dcorreah\Postmark\Attachment;
 use PHPUnit\Framework\TestCase;
 
 class AttachmentTest extends TestCase

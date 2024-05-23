@@ -1,8 +1,8 @@
 <?php
 
-namespace Mvdnbrk\Postmark\Tests;
+namespace dcorreah\Postmark\Tests;
 
-use Mvdnbrk\Postmark\Contact;
+use dcorreah\Postmark\Contact;
 use PHPUnit\Framework\TestCase;
 
 class ContactTest extends TestCase

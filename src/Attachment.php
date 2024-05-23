@@ -1,6 +1,6 @@
 <?php
 
-namespace Mvdnbrk\Postmark;
+namespace dcorreah\Postmark;
 
 class Attachment
 {
@@ -59,9 +59,9 @@ class Attachment
     /**
      * base64 decoded content of the attachment.
      *
-     * @return mixed
+     * @return false|string
      */
-    public function content()
+    public function content(): bool|string
     {
         return base64_decode(chunk_split($this->content));
     }

@@ -1,8 +1,11 @@
 <?php
 
-namespace Mvdnbrk\Postmark\Support;
+namespace dcorreah\Postmark\Support;
 
 use DateTime;
+use Exception;
+use Illuminate\Support\Collection;
+use InvalidArgumentException;
 
 /**
  * This file is part of the Postmark Inbound package.
@@ -39,6 +42,40 @@ class PostmarkDate extends DateTime
     ];
 
     /**
+     * Create a new instance from a string.
+     *
+     * @param string $date
+     * @return static
+     */
+    public static function parse($date)
+    {
+        try {
+            return new static(
+                collect(explode(' ', $date))
+                    ->reject(function ($value) {
+                        return self::getAbbreviatedDaysCollection()->contains(trim($value, ','));
+                    })
+                    ->take(5)
+                    ->implode(' ')
+            );
+        } catch (Exception $e) {
+            //
+        }
+
+        return new static();
+    }
+
+    /**
+     * Get a collection of the textual respresentation of a day as three letters.
+     *
+     * @return Collection
+     */
+    public static function getAbbreviatedDaysCollection()
+    {
+        return collect(static::getAbbreviatedDays());
+    }
+
+    /**
      * Get the textual respresentation of a day as three letters.
      *
      * @return array
@@ -46,16 +83,6 @@ class PostmarkDate extends DateTime
     public static function getAbbreviatedDays()
     {
         return static::$days_abbreviated;
-    }
-
-    /**
-     * Get a collection of the textual respresentation of a day as three letters.
-     *
-     * @return \Mvdnbrk\Postmark\Support\Collection
-     */
-    public static function getAbbreviatedDaysCollection()
-    {
-        return collect(static::getAbbreviatedDays());
     }
 
     /**
@@ -69,45 +96,18 @@ class PostmarkDate extends DateTime
     }
 
     /**
-     * Create a new instance from a string.
-     *
-     * @param  string $date
-     * @return static
-     */
-    public static function parse($date)
-    {
-        try {
-            return new static(
-                collect(explode(' ', $date))
-                ->reject(function ($value) {
-                    return self::getAbbreviatedDaysCollection()->contains(trim($value, ','));
-                })
-                ->take(5)
-                ->implode(' ')
-            );
-        } catch (\Exception $e) {
-            //
-        }
-
-        return new static();
-    }
-
-    /**
      * Dynamically retrieve attributes on the data model.
      *
-     * @param  string  $key
-     * @throws \InvalidArgumentException
-     * @return mixed
+     * @param string $key
+     * @return bool|string
+     * @throws InvalidArgumentException
      */
     public function __get($key)
     {
-        switch (true) {
-            case $key === 'isUtc':
-                return $this->getOffset() === 0;
-            case $key === 'timezone':
-                return $this->getTimezone()->getName();
-            default:
-                throw new \InvalidArgumentException(sprintf("Unknown getter '%s'", $key));
-        }
+        return match (true) {
+            $key === 'isUtc' => $this->getOffset() === 0,
+            $key === 'timezone' => $this->getTimezone()->getName(),
+            default => throw new InvalidArgumentException(sprintf("Unknown getter '%s'", $key)),
+        };
     }
 }

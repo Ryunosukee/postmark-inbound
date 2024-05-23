@@ -1,20 +1,21 @@
 <?php
 
-namespace Mvdnbrk\Postmark;
+namespace dcorreah\Postmark;
 
-use DateTime;
+use Illuminate\Support\Collection;
+use InvalidArgumentException;
 use Mvdnbrk\Postmark\Support\PostmarkDate;
 
 /**
  * API to process Postmark Inbound Webhooks.
  *
- * @property-read \Mvdnbrk\Postmark\Contact $from
- * @property-read \Tightenco\Collect\Support\Collection $attachments
- * @property-read \Tightenco\Collect\Support\Collection $bcc
- * @property-read \Tightenco\Collect\Support\Collection $cc
- * @property-read \Tightenco\Collect\Support\Collection $headers
- * @property-read \Tightenco\Collect\Support\Collection $to
- * @property-read \Mvdnbrk\Postmark\Support\PostmarkDate $date
+ * @property-read Contact $from
+ * @property-read Collection $attachments
+ * @property-read Collection $bcc
+ * @property-read Collection $cc
+ * @property-read Collection $headers
+ * @property-read Collection $to
+ * @property-read PostmarkDate $date
  * @property-read bool $isSpam
  * @property-read string $htmlBody
  * @property-read string $mailboxHash
@@ -36,7 +37,7 @@ class InboundMessage
     /**
      * Collection of the json data.
      *
-     * @var \Tightenco\Collect\Support\Collection
+     * @var Collection
      */
     protected $data;
 
@@ -51,14 +52,14 @@ class InboundMessage
      * Create a new InboundMessage instance.
      *
      * @param mixed $json
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function __construct($json = null)
     {
         $this->data = collect(json_decode($json, true));
 
         if ((json_last_error() !== JSON_ERROR_NONE)) {
-            throw new \InvalidArgumentException('You must provide a valid JSON source.');
+            throw new InvalidArgumentException('You must provide a valid JSON source.');
         }
 
         $this->datetime = PostmarkDate::parse($this->data->get('Date'));
@@ -67,9 +68,9 @@ class InboundMessage
     /**
      * Retrieve the collecion of attachments.
      *
-     * @return \Mvdnbrk\Postmark\Support\Collection
+     * @return Collection
      */
-    public function getAttachmentsAttribute()
+    public function getAttachmentsAttribute(): Collection
     {
         return collect($this->data->get('Attachments', []))
             ->map(function ($data) {
@@ -88,7 +89,7 @@ class InboundMessage
     /**
      * Retrieve the collecion of bcc recipients.
      *
-     * @return \Mvdnbrk\Postmark\Support\Collection
+     * @return Collection
      */
     public function getBccAttribute()
     {
@@ -96,9 +97,25 @@ class InboundMessage
     }
 
     /**
+     * Parse contacts and return a collection of contacts.
+     *
+     * @param array $contacts
+     * @return Collection
+     */
+    protected function parseContacts($contacts = [])
+    {
+        return collect($contacts)
+            ->map(function ($contact) {
+                $contact = collect($contact);
+
+                return new Contact($contact->get('Name'), $contact->get('Email'), $contact->get('MailboxHash'));
+            });
+    }
+
+    /**
      * Retrieve the collecion of cc recipients.
      *
-     * @return \Mvdnbrk\Postmark\Support\Collection
+     * @return Collection
      */
     public function getCcAttribute()
     {
@@ -120,7 +137,7 @@ class InboundMessage
     /**
      * Retrieve the collecion of recipient contacts.
      *
-     * @return \Mvdnbrk\Postmark\Support\Collection
+     * @return Collection
      */
     public function getToAttribute()
     {
@@ -140,7 +157,7 @@ class InboundMessage
     /**
      * Retrieve the UTC date from the message.
      *
-     * @return \Mvdnbrk\Postmark\Support\PostmarkDate
+     * @return PostmarkDate
      */
     public function getDateAttribute()
     {
@@ -160,7 +177,7 @@ class InboundMessage
     /**
      * Retrieve the collecion of headers.
      *
-     * @return \Mvdnbrk\Postmark\Support\Collection
+     * @return Collection
      */
     public function getHeadersAttribute()
     {
@@ -209,7 +226,7 @@ class InboundMessage
      */
     public function getSpamScoreAttribute()
     {
-        return (float) $this->headers->get('X-Spam-Score', '0.0');
+        return (float)$this->headers->get('X-Spam-Score', '0.0');
     }
 
     /**
@@ -223,40 +240,24 @@ class InboundMessage
     }
 
     /**
-     * Parse contacts and return a collection of contacts.
-     *
-     * @param  array  $contacts
-     * @return \Mvdnbrk\Postmark\Support\Collection
-     */
-    protected function parseContacts($contacts = [])
-    {
-        return collect($contacts)
-            ->map(function ($contact) {
-                $contact = collect($contact);
-
-                return new Contact($contact->get('Name'), $contact->get('Email'), $contact->get('MailboxHash'));
-            });
-    }
-
-    /**
      * Dynamically retrieve attributes on the data model.
      *
-     * @param  string  $key
-     * @throws \InvalidArgumentException
+     * @param string $key
      * @return mixed
+     * @throws InvalidArgumentException
      */
     public function __get($key)
     {
         $key = ucfirst($key);
 
-        if (method_exists($this, 'get'.$key.'Attribute')) {
-            return $this->{'get'.$key.'Attribute'}();
+        if (method_exists($this, 'get' . $key . 'Attribute')) {
+            return $this->{'get' . $key . 'Attribute'}();
         }
 
         if ($this->data->has($key)) {
             return $this->data->get($key);
         }
 
-        throw new \InvalidArgumentException(sprintf("Unknown getter '%s'", $key));
+        throw new InvalidArgumentException(sprintf("Unknown getter '%s'", $key));
     }
 }

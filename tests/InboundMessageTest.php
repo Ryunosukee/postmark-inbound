@@ -1,9 +1,9 @@
 <?php
 
-namespace Mvdnbrk\Postmark\Tests;
+namespace dcorreah\Postmark\Tests;
 
-use Mvdnbrk\Postmark\InboundMessage;
-use Mvdnbrk\Postmark\Support\PostmarkDate;
+use dcorreah\Postmark\InboundMessage;
+use dcorreah\Postmark\Support\PostmarkDate;
 use PHPUnit\Framework\TestCase;
 
 class InboundMessageTest extends TestCase

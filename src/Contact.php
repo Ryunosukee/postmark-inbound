@@ -1,6 +1,6 @@
 <?php
 
-namespace Mvdnbrk\Postmark;
+namespace dcorreah\Postmark;
 
 class Contact
 {
