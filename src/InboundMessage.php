@@ -4,7 +4,7 @@ namespace dcorreah\Postmark;
 
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
-use Mvdnbrk\Postmark\Support\PostmarkDate;
+use dcorreah\Postmark\Support\PostmarkDate;
 
 /**
  * API to process Postmark Inbound Webhooks.
@@ -44,7 +44,7 @@ class InboundMessage
     /*
      * DateTime when the message was reveived,
      *
-     * @var \Mvdnbrk\Postmark\Support\PostmarkDate
+     * @var \dcorreah\Postmark\Support\PostmarkDate
      */
     protected $datetime;
 

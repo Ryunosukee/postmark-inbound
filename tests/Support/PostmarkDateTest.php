@@ -1,10 +1,10 @@
 <?php
 
-namespace Mvdnbrk\Postmark\Tests\Support;
+namespace dcorreah\Postmark\Tests\Support;
 
-use Mvdnbrk\Postmark\Support\PostmarkDate;
+use dcorreah\Postmark\Support\PostmarkDate;
+use Illuminate\Support\Collection;
 use PHPUnit\Framework\TestCase;
-use Tightenco\Collect\Support\Collection;
 
 class PostmarkDateTest extends TestCase
 {
