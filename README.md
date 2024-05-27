@@ -15,13 +15,13 @@ Simple API to process Postmark Inbound Webhooks.
 You can install the package via composer:
 
 ``` bash
-composer require mvdnbrk/postmark-inbound
+composer require dcorreah/postmark-inbound
 ```
 
 ## Usage
 
 ``` php
-$inbound = new \Mvdnbrk\Postmark\InboundMessage(file_get_contents('php://input'));
+$inbound = new \dcorreah\Postmark\InboundMessage(file_get_contents('php://input'));
 
 $inbound->from->name;                   // John Doe
 $inbound->from->email;                  // john@example.com
@@ -144,15 +144,15 @@ Please review [our security policy](../../security/policy) on how to report secu
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
 
-[ico-version]: https://img.shields.io/packagist/v/mvdnbrk/postmark-inbound.svg?style=flat-square
+[ico-version]: https://img.shields.io/packagist/v/dcorreah/postmark-inbound.svg?style=flat-square
 [ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square
-[ico-tests]: https://img.shields.io/github/workflow/status/mvdnbrk/postmark-inbound/tests/main?label=tests&style=flat-square
-[ico-downloads]: https://img.shields.io/packagist/dt/mvdnbrk/postmark-inbound.svg?style=flat-square
+[ico-tests]: https://img.shields.io/github/workflow/status/dcorreah/postmark-inbound/tests/main?label=tests&style=flat-square
+[ico-downloads]: https://img.shields.io/packagist/dt/dcorreah/postmark-inbound.svg?style=flat-square
 [ico-styleci]: https://github.styleci.io/repos/102744848/shield?style=flat-square&branch=main
 
-[link-packagist]: https://packagist.org/packages/mvdnbrk/postmark-inbound
-[link-tests]: https://github.com/mvdnbrk/postmark-inbound/actions?query=workflow%3Atests
-[link-downloads]: https://packagist.org/packages/mvdnbrk/postmark-inbound
+[link-packagist]: https://packagist.org/packages/dcorreah/postmark-inbound
+[link-tests]: https://github.com/dcorreah/postmark-inbound/actions?query=workflow%3Atests
+[link-downloads]: https://packagist.org/packages/dcorreah/postmark-inbound
 [link-styleci]: https://github.styleci.io/repos/102744848
-[link-author]: https://github.com/mvdnbrk
+[link-author]: https://github.com/dcorreah
 [link-contributors]: ../../contributors
